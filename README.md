@@ -224,3 +224,21 @@ cancelPickup := model.CancelPickup{}
 res := fedex.CancelPickup(cancelPickup)
 log.Println(res)
 ```
+10. 地址验证
+```go
+validate := model.ValidateAddress{}
+address := model.ValidAddress{}
+addressDetail := model.ValidAddressDetail{}
+addressDetail.AddressVerificationId = "string"
+addressDetail.City = "IRVING"
+addressDetail.PostalCode = "75063-8659"
+addressDetail.CountryCode = "US"
+addressDetail.StateOrProvinceCode = "TX"
+addressDetail.StreetLines = append(addressDetail.StreetLines, "7372 PARKRIDGE BLVD")
+addressDetail.StreetLines = append(addressDetail.StreetLines, "APT 286")
+addressDetail.StreetLines = append(addressDetail.StreetLines, "2903 sprank")
+address.Address = addressDetail
+validate.AddressesToValidate = append(validate.AddressesToValidate, address)
+res := fedex.ValidateAddress(validate)
+log.Println(res)
+```
