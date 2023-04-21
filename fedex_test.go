@@ -76,3 +76,50 @@ func TestFedex_GlobalTrade(t *testing.T) {
 	res := fedex.GlobalTrade(trade)
 	log.Println(res)
 }
+
+func TestFedex_CheckPickupAvailability(t *testing.T) {
+	availability := model.CheckPickupAvailability{}
+	availability.AssociatedAccountNumber = "740561073"
+	availability.PickupAddress.CountryCode = "CN"
+	availability.PickupAddress.PostalCode = "518118"
+	availability.PickupRequestType = append(availability.PickupRequestType, "SAME_DAY")
+	availability.Carriers = append(availability.Carriers, "FDXE")
+	availability.CountryRelationship = "INTERNATIONAL"
+	availability.AssociatedAccountNumberType = "FEDEX_EXPRESS"
+	availability.PickupType = "ON_CALL"
+	availability.DispatchDate = "2023-04-21"
+	availability.PackageReadyTime = "15:00:00"
+	availability.CustomerCloseTime = "20:00:00"
+	res := fedex.CheckPickupAvailability(availability)
+	log.Println(res)
+}
+
+func TestFedex_CheckPickup(t *testing.T) {
+	pickUp := model.CreatePickup{}
+	res := fedex.CheckPickup(pickUp)
+	log.Println(res)
+}
+
+func TestFedex_CancelPickup(t *testing.T) {
+	cancelPickup := model.CancelPickup{}
+	res := fedex.CancelPickup(cancelPickup)
+	log.Println(res)
+}
+
+func TestFedex_ValidateAddress(t *testing.T) {
+	validate := model.ValidateAddress{}
+	address := model.ValidAddress{}
+	addressDetail := model.ValidAddressDetail{}
+	addressDetail.AddressVerificationId = "string"
+	addressDetail.City = "IRVING"
+	addressDetail.PostalCode = "75063-8659"
+	addressDetail.CountryCode = "US"
+	addressDetail.StateOrProvinceCode = "TX"
+	addressDetail.StreetLines = append(addressDetail.StreetLines, "7372 PARKRIDGE BLVD")
+	addressDetail.StreetLines = append(addressDetail.StreetLines, "APT 286")
+	addressDetail.StreetLines = append(addressDetail.StreetLines, "2903 sprank")
+	address.Address = addressDetail
+	validate.AddressesToValidate = append(validate.AddressesToValidate, address)
+	res := fedex.ValidateAddress(validate)
+	log.Println(res)
+}

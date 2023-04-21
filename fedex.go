@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/go-resty/resty/v2"
 	"github.com/wms3001/fedex/model"
+	"log"
 )
 
 type Fedex struct {
@@ -15,7 +16,7 @@ type Fedex struct {
 	Access_Token  model.AccessToken `json:"access_Token"`
 }
 
-//获取授权
+// 获取授权
 func (fedex *Fedex) Auth() {
 	url := fedex.Url + "/oauth/token"
 	var body map[string]string
@@ -29,7 +30,7 @@ func (fedex *Fedex) Auth() {
 	fedex.Access_Token = accessToken
 }
 
-//获取fedex服务站
+// 获取fedex服务站
 func (fedex *Fedex) Location(req model.LocationRequest) string {
 	url := fedex.Url + "/location/v1/locations"
 	bt, _ := json.Marshal(req)
@@ -71,6 +72,36 @@ func (fedex *Fedex) GlobalTrade(trade model.GlobalTrade) string {
 	return rep
 }
 
+func (fedex *Fedex) CheckPickupAvailability(availability model.CheckPickupAvailability) string {
+	url := fedex.Url + "/pickup/v1/pickups/availabilities"
+	req, _ := json.Marshal(availability)
+	log.Println(string(req))
+	rep := fedex.PostJson(url, string(req))
+	return rep
+}
+
+func (fedex *Fedex) CheckPickup(pickup model.CreatePickup) string {
+	url := fedex.Url + "/pickup/v1/pickups"
+	req, _ := json.Marshal(pickup)
+	rep := fedex.PostJson(url, string(req))
+	return rep
+}
+
+func (fedex *Fedex) CancelPickup(pickup model.CancelPickup) string {
+	url := fedex.Url + "/pickup/v1/pickups/cancel"
+	req, _ := json.Marshal(pickup)
+	rep := fedex.PutJson(url, string(req))
+	return rep
+}
+
+func (fedex *Fedex) ValidateAddress(address model.ValidateAddress) string {
+	url := fedex.Url + "/address/v1/addresses/resolve"
+	req, _ := json.Marshal(address)
+	log.Println(string(req))
+	rep := fedex.PostJson(url, string(req))
+	return rep
+}
+
 func (fedex *Fedex) PostJson(url string, body string) string {
 	client := resty.New()
 	resp, err := client.R().
@@ -78,6 +109,27 @@ func (fedex *Fedex) PostJson(url string, body string) string {
 		SetHeader("Authorization", "Bearer "+fedex.Access_Token.Access_Token).
 		SetBody(body).
 		Post(url)
+	if err != nil {
+		response := model.FedexError{}
+		response.TransactionId = "err"
+		errd := model.FedexErrorDetail{}
+		errd.Code = "-1"
+		errd.Message = err.Error()
+		response.Errors = append(response.Errors, errd)
+		str, _ := json.Marshal(response)
+		return string(str)
+	} else {
+		return string(resp.Body())
+	}
+}
+
+func (fedex *Fedex) PutJson(url string, body string) string {
+	client := resty.New()
+	resp, err := client.R().
+		SetHeader("Content-Type", "application/json").
+		SetHeader("Authorization", "Bearer "+fedex.Access_Token.Access_Token).
+		SetBody(body).
+		Put(url)
 	if err != nil {
 		response := model.FedexError{}
 		response.TransactionId = "err"
