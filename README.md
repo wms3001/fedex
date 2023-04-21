@@ -73,3 +73,11 @@ res := fedex.UploadImage(uploadImage, path)
 }
 
 ```
+6. 全球交易api
+```go
+trade := model.GlobalTrade{}
+trade.CarrierCode = "FDXE"
+trade.OriginAddress.CountryCode = "CN"
+trade.DestinationAddress.CountryCode = "US"
+res := fedex.GlobalTrade(trade)
+```
