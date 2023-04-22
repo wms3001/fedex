@@ -97,7 +97,41 @@ func (fedex *Fedex) CancelPickup(pickup model.CancelPickup) string {
 func (fedex *Fedex) ValidateAddress(address model.ValidateAddress) string {
 	url := fedex.Url + "/address/v1/addresses/resolve"
 	req, _ := json.Marshal(address)
-	log.Println(string(req))
+	rep := fedex.PostJson(url, string(req))
+	return rep
+}
+
+func (fedex *Fedex) ValidatePostal(postal model.ValidatePostal) string {
+	url := fedex.Url + "/country/v1/postal/validate"
+	req, _ := json.Marshal(postal)
+	rep := fedex.PostJson(url, string(req))
+	return rep
+}
+
+func (fedex *Fedex) TrackMultiplePieceShipment(shipment model.TrackMultiplePieceShipment) string {
+	url := fedex.Url + "/track/v1/associatedshipments"
+	req, _ := json.Marshal(shipment)
+	rep := fedex.PostJson(url, string(req))
+	return rep
+}
+
+func (fedex *Fedex) SendNotification(notification model.SendNotification) string {
+	url := fedex.Url + "/track/v1/associatedshipments"
+	req, _ := json.Marshal(notification)
+	rep := fedex.PostJson(url, string(req))
+	return rep
+}
+
+func (fedex *Fedex) TrackbyTrackingNumber(number model.TrackbyTrackingNumber) string {
+	url := fedex.Url + "/track/v1/trackingnumbers"
+	req, _ := json.Marshal(number)
+	rep := fedex.PostJson(url, string(req))
+	return rep
+}
+
+func (fedex *Fedex) CreateShipment(shipment model.CreateShipment) string {
+	url := fedex.Url + "/ship/v1/shipments"
+	req, _ := json.Marshal(shipment)
 	rep := fedex.PostJson(url, string(req))
 	return rep
 }

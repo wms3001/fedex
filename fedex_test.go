@@ -123,3 +123,56 @@ func TestFedex_ValidateAddress(t *testing.T) {
 	res := fedex.ValidateAddress(validate)
 	log.Println(res)
 }
+
+func TestFedex_ValidatePostal(t *testing.T) {
+	post := model.ValidatePostal{}
+	post.PostalCode = "42101"
+	post.CountryCode = "US"
+	post.CarrierCode = "FDXE"
+	post.StateOrProvinceCode = "KY"
+	post.ShipDate = "2023-04-22"
+	post.CheckForMismatch = true
+	res := fedex.ValidatePostal(post)
+	log.Println(res)
+}
+
+func TestFedex_TrackMultiplePieceShipment(t *testing.T) {
+	track := model.TrackMultiplePieceShipment{}
+	track.MasterTrackingNumberInfo.ShipDateBegin = "2023-04-01"
+	track.MasterTrackingNumberInfo.ShipDateEnd = "2023-04-22"
+	track.MasterTrackingNumberInfo.TrackingNumberInfo.TrackingNumberUniqueId = "213424234"
+	track.MasterTrackingNumberInfo.TrackingNumberInfo.CarrierCode = "FDXE"
+	track.MasterTrackingNumberInfo.TrackingNumberInfo.TrackingNumber = "858488600850"
+	track.IncludeDetailedScans = true
+	track.AssociatedType = "STANDARD_MPS"
+	track.PagingDetails.PagingToken = "38903279038"
+	track.PagingDetails.ResultsPerPage = 56
+	res := fedex.TrackMultiplePieceShipment(track)
+	log.Println(res)
+}
+
+func TestFedex_SendNotification(t *testing.T) {
+	send := model.SendNotification{}
+	res := fedex.SendNotification(send)
+	log.Println(res)
+}
+
+func TestFedex_TrackbyTrackingNumber(t *testing.T) {
+	number := model.TrackbyTrackingNumber{}
+	number.IncludeDetailedScans = true
+	numberInfo := model.TrackbyTrackingNumberInfo{}
+	numberInfo.ShipDateBegin = "2023-04-01"
+	numberInfo.ShipDateEnd = "2023-04-22"
+	numberInfo.TrackingNumberInfo.TrackingNumberUniqueId = "erwer"
+	numberInfo.TrackingNumberInfo.CarrierCode = "FDXE"
+	numberInfo.TrackingNumberInfo.TrackingNumber = "128667043726"
+	number.TrackingInfo = append(number.TrackingInfo, numberInfo)
+	res := fedex.TrackbyTrackingNumber(number)
+	log.Println(res)
+}
+
+func TestFedex_CreateShipment(t *testing.T) {
+	shipment := model.CreateShipment{}
+	res := fedex.CreateShipment(shipment)
+	log.Println(res)
+}
