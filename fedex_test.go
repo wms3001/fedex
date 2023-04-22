@@ -14,8 +14,8 @@ var fedex Fedex
 
 func TestFedex_Auth(t *testing.T) {
 	fedex.Url = "https://apis-sandbox.fedex.com"
-	fedex.Client_Id = "l7dfb2cabe001c4286bdf680d6aba072df"
-	fedex.Client_Secret = "4de70663756d4b6d9184acf9462789c0"
+	fedex.Client_Id = ""
+	fedex.Client_Secret = ""
 	fedex.Grant_Type = "client_credentials"
 	fedex.Auth()
 	str, _ := json.Marshal(fedex)
